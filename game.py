@@ -1,9 +1,11 @@
 import numpy as np
 import pandas as pd
+import ast
+
 
 class Card:
-    def __init__(self, nom, card_type, cost, effect, points):
-        self.nom = nom
+    def __init__(self, name, card_type, cost, effect, points):
+        self.name = name
         self.card_type = card_type
         self.cost = cost
         self.effect = effect
@@ -14,10 +16,13 @@ class Card:
             if player_resources.get(resource, 0) < quantity:
                 return False
         return True
+    
+    def __repr__(self):
+        return f"Name: {self.name}, Type: {self.card_type}, Coût: {self.cost}, Effet: {self.effect}, points: {self.points}\n"
 
 class Player:
     def __init__(self, name, wonder = None):
-        self.nom = name
+        self.name = name
         self.wonder = wonder
         self.resources = {"wood" : 0, "stone" : 0, "clay" : 0, "ore" : 0, "glass" : 0, "cloth" : 0, "papyrus" : 0}
         self.played_cards = []
@@ -52,8 +57,23 @@ class Player:
         else:
             print(f"Resource {resource} does not exist.")
 
+# generics methods
+def import_cards(path):
+    deck_cards = []
+    cards = pd.read_excel(path)
+    for index, row in cards.iterrows():
+        
+        card = Card(row["name"], row["card_type"], ast.literal_eval(row["cost"]), row["effect"], int(row["points"]))
+        deck_cards.append(card)
+    return deck_cards
+
 def main():
-    print("Hello World!")
+    deck_cards = import_cards('resources/cards.xlsx')
+    print(deck_cards)
+    print(type(deck_cards[0].cost))
+    
+    
+
 
 if __name__ == "__main__":
     main()
