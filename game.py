@@ -50,7 +50,7 @@ class Card:
         return f"Name: {self.name}, Type: {self.card_type}, Coût: {self.cost}, Effet: {self.effect}, War: {self.war}, Points: {self.points}, shortcuts: {self.shortcuts}, Min_player: {self.min_players}, Age: {self.age} \n"
 
 class Player:
-    def __init__(self, name, wonder = None):
+    def __init__(self, name, wonder):
         self.name = name
         self.wonder = wonder
         self.resources = {"wood" : 0, "stone" : 0, "clay" : 0, "ore" : 0, "glass" : 0, "cloth" : 0, "papyrus" : 0}
