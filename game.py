@@ -31,7 +31,7 @@ class Card:
                     return True
 
         # Coins cost
-        elif "coins" in self.cost:
+        if "coins" in self.cost:
             if player_coins >= self.cost["coins"]:
                 return True
             else:
@@ -40,8 +40,8 @@ class Card:
         # Resources cost
         # still need choice implementation !     
         else:
-            for resource, quantity in self.cost.items():
-                if player_resources.get(resource, 0) < quantity:
+            for key in self.cost:
+                if player_resources[key] < self.cost[key]:
                     return False
 
         return True
@@ -73,12 +73,12 @@ class Player:
                 if "choice" in card.effect:
                     pass
                 else:
-                    for resource, quantity in card.effect:
-                        self.add_resource(resource, quantity)
+                    for key in card.effect:
+                        self.add_resource(key, card.effect[key])
 
             if card.card_type == "manufactured_goods":
-                for resource, quantity in card.effect:
-                    self.add_resource(resource, quantity)
+                for key in card.effect:
+                    self.add_resource(key, card.effect[key])
 
             if card.card_type == "civil_buildings":
                 self.points += card.points
@@ -87,8 +87,8 @@ class Player:
                 self.war += card.war
             
             if card.card_type == "scientific_buildings":
-                for science, quantity in card.effect:
-                    self.add_science(science, quantity)
+                for key in card.effect:
+                    self.add_science(key, card.effect[key])
             
             if card.card_type == "comercial_buildings":
                 #TODO
@@ -137,9 +137,14 @@ def import_cards(path):
     return deck_cards
 
 def main():
-    deck_cards = import_cards('resources/cards.xlsx')
-    print(deck_cards)
-    print(deck_cards[0].shortcuts[0])
+    first_step = Card("first", "civil_buildings", {"clay" : 2}, {}, 0, 3, [], 2, 1)
+    second_step = Card("second", "scientific_buildings", {"ore" : 2, "cloth": 1}, {"compass" : 1, "tablet" : 1, "wheel" : 1}, 0, 0, [], 2, 2)
+    third_step = Card("third", "civil_buildings", {"wood" : 4}, {}, 0, 7, [], 2, 3)
+    wonder = Wonder("Babylon",{"wood" : 1}, first_step, second_step, third_step)
+    player = Player("player1", wonder)
+    card1 = Card("atelier", "scientific_buildings", {"glass" : 1}, {"wheel" : 1}, 0, 0, ["target", "lamp"], 7, 1)
+
+    card1.playable(player.shortcuts, player.resources, player.coins)
     
     
 
